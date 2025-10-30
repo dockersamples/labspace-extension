@@ -1,6 +1,6 @@
 # Docker Desktop extension
 
-This directory contains the code for the Docker Desktop extension for Labspaces.
+This repo contains the code for the Docker Desktop extension for Labspaces.
 
 ## Development
 
