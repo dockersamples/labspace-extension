@@ -1,10 +1,15 @@
-FROM node:lts-slim AS build
+FROM node:lts-slim AS base
 WORKDIR /usr/local/app
 COPY package*.json ./
 RUN npm install
 COPY --link eslint.config.js vite.config.js index.html ./
 COPY --link ./public ./public
 COPY --link ./src ./src
+
+FROM base AS dev
+CMD ["npm", "run", "dev"]
+
+FROM base AS build
 RUN npm run build && ls dist
 
 FROM alpine

@@ -1,0 +1,27 @@
+services:
+  app:
+    build:
+      context: ./
+      target: dev
+    ports:
+      - 5173:5173
+    develop:
+      watch:
+        - path: ./
+          action: sync
+          target: /usr/local/app
+          initial_sync: true
+          ignore:
+            - dev/**
+            - compose.yaml
+            - Dockerfile
+            - node_modules
+        - path: ./package-lock.json
+          action: rebuild
+
+  assets:
+    build: ./dev
+    ports:
+      - 80:80
+    volumes:
+      - ./dev/src:/usr/share/nginx/html
