@@ -1,0 +1,15 @@
+tags:
+  - name: demos
+    label: Demos
+
+labspaces:
+  - title: DHI Demo
+    description: |
+      Provides a demo of Docker' Hardened Images
+    repo: https://github.com/dockersamples/labspace-agentic-apps-with-docker
+    publishedRepo: dockersamples/labspace-agentic-apps-with-docker
+    author: Docker
+    datePublished: 2025-10-21
+    level: Beginner
+    tags:
+      - demos

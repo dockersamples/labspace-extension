@@ -2,14 +2,13 @@ import { useDockerContext } from "./DockerContext";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
-import { LabspaceCard } from "./components/LabspaceCard";
 import { LaunchModal } from "./components/LaunchModal";
 import { RunningNotice } from "./components/RunningNotice";
 import { useState } from "react";
 import { AddLabspaceModal } from "./components/AddLabspaceModal";
-import { UrlHandlingModal } from "./components/UrlHandlingModal";
+import { LaunchLabspaceFromUrlModal } from "./components/LaunchLabspaceFromUrlModal";
+import { LabspaceCatalog } from "./components/Catalog/LabspaceCatalog";
+import { useCatalogs } from "./CatalogContext";
 
 export function Home() {
   const {
@@ -19,12 +18,10 @@ export function Home() {
     stoppingLabspace,
     startLabspace,
     startingLabspace,
-    highlightedLabspaces,
-    labspaces,
     launchLog,
-    addLabspace,
-    removeLabspace,
   } = useDockerContext();
+
+  const { labspaces, addCustomLabspace } = useCatalogs();
 
   const [showAddModal, setShowAddModal] = useState(false);
 
@@ -47,103 +44,26 @@ export function Home() {
         isStopping={stoppingLabspace}
       />
 
-      <Row className="mb-5">
-        <Col xs={12}>
-          <h3>Highlighted Labspaces</h3>
-        </Col>
-
-        {highlightedLabspaces.map((labspace) => (
-          <Col xs={12} sm={6} md={4} key={labspace.title} className="mb-4">
-            <LabspaceCard
-              labspace={labspace}
-              onLaunch={() => startLabspace(labspace.publishedRepo)}
-              starting={startingLabspace}
-              running={hasLabspace}
-            />
-          </Col>
-        ))}
-      </Row>
-
-      <Row className="mb-5">
-        <Col xs={9}>
-          <h3>Other Labspaces</h3>
-          <p className="lead">
-            Labspaces can come from anywhere in the community! Find more or add
-            your own below!
-          </p>
-        </Col>
-        <Col xs={3} className="text-end">
-          <Button variant="primary" onClick={() => setShowAddModal(true)}>
-            + Add Labspace
-          </Button>
-        </Col>
-
-        <Col xs={12}>
-          <Table>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Location</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {labspaces.length === 0 && (
-                <tr>
-                  <td colSpan={3} className="text-center">
-                    <em>
-                      No additional Labspaces are available at this time. Add
-                      your own!
-                    </em>
-                  </td>
-                </tr>
-              )}
-              {labspaces.map((labspace) => (
-                <tr key={labspace.title}>
-                  <td className="align-middle">{labspace.title}</td>
-                  <td className="align-middle">{labspace.publishedRepo}</td>
-                  <td className="text-end">
-                    <Button
-                      variant="primary"
-                      onClick={() => startLabspace(labspace.publishedRepo)}
-                      className="me-2"
-                    >
-                      Launch
-                    </Button>
-                    { !labspace.catalog && (
-                      <Button
-                        variant="danger"
-                        onClick={() => removeLabspace(labspace.publishedRepo)}
-                      >
-                        Remove
-                      </Button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Col>
-      </Row>
+      <LabspaceCatalog
+        labspaces={labspaces}
+        onTriggerAddLabspace={() => setShowAddModal(true)}
+      />
 
       <LaunchModal launchLog={launchLog} starting={startingLabspace} />
+
       <AddLabspaceModal
         show={showAddModal}
         onAdd={(title, repo) => {
-          addLabspace(title, repo);
+          addCustomLabspace(title, repo);
           setShowAddModal(false);
         }}
         onCancel={() => setShowAddModal(false)}
       />
 
-      <UrlHandlingModal
+      <LaunchLabspaceFromUrlModal
         onLaunchConfirmation={(title, location) => {
-          if (
-            [...highlightedLabspaces, ...labspaces].find(
-              (l) => l.location === location,
-            ) === undefined
-          )
-            addLabspace(title, location);
+          if (labspaces.find((l) => l.location === location) === undefined)
+            addCustomLabspace(title, location);
           startLabspace(location);
         }}
       />

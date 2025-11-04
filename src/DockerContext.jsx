@@ -10,15 +10,18 @@ import Spinner from "react-bootstrap/Spinner";
 
 import { parse } from "yaml";
 import { LogProcessor } from "./logProcessor.js";
+import { useCatalogs } from "./CatalogContext.jsx";
 
 const CATALOGS = [
-  "https://raw.githubusercontent.com/dockersamples/awesome-labspaces/refs/heads/main/catalog.yaml",
+  // "https://raw.githubusercontent.com/dockersamples/awesome-labspaces/refs/heads/main/catalog.yaml",
+  "http://localhost/catalog.yaml",
 ];
 
 const DockerContext = createContext();
 
 export function DockerContextProvider({ children }) {
-  const [labspaces, setLabspaces] = useState(null);
+  const { catalogs } = useCatalogs();
+
   const [additionalLabspaces, setAdditionalLabspaces] = useState(
     localStorage.getItem("custom-labspaces")
       ? JSON.parse(localStorage.getItem("custom-labspaces"))
@@ -33,25 +36,6 @@ export function DockerContextProvider({ children }) {
   const [forceRefreshCount, setForceRefreshCount] = useState(0);
 
   const logProcessor = useMemo(() => new LogProcessor(), []);
-
-  useEffect(() => {
-    Promise.all(
-      CATALOGS.map((url) =>
-        fetch(url)
-          .then((res) => res.text())
-          .then((text) => parse(text))
-          .then((data) => data.labspaces || [])
-          .then((labs) => labs.map(l => ({...l, catalog: url}))),
-      ),
-    ).then((results) => {
-      setLabspaces(results.flat()
-        .sort((a, b) => {
-          if (a.highlighted && !b.highlighted) return -1;
-          if (!a.highlighted && b.highlighted) return 1;
-          return a.title.localeCompare(b.title);
-        }));
-    });
-  }, []);
 
   useEffect(() => {
     function checkIfRunning() {
@@ -133,39 +117,6 @@ export function DockerContextProvider({ children }) {
     [setHasLabspace, setStartingLabspace, setForceRefreshCount, setLaunchLog],
   );
 
-  const addLabspace = useCallback(
-    (title, publishedRepo) => {
-      const newLabspace = { title, publishedRepo };
-      setAdditionalLabspaces((labspaces) => [...labspaces, newLabspace]);
-    },
-    [setAdditionalLabspaces],
-  );
-
-  const removeLabspace = useCallback(
-    (publishedRepo) => {
-      setAdditionalLabspaces((labs) =>
-        labs.filter((l) => l.publishedRepo !== publishedRepo),
-      );
-    },
-    [setAdditionalLabspaces],
-  );
-
-  useEffect(() => {
-    localStorage.setItem(
-      "custom-labspaces",
-      JSON.stringify(additionalLabspaces),
-    );
-  }, [additionalLabspaces]);
-
-  if (!labspaces) {
-    return (
-      <div className="mt-5 text-center">
-        <Spinner />
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
   return (
     <DockerContext.Provider
       value={{
@@ -178,13 +129,6 @@ export function DockerContextProvider({ children }) {
         startLabspace,
         startingLabspace,
         launchLog,
-
-        highlightedLabspaces: labspaces
-          .filter((l) => l.highlighted)
-          .slice(0, 3),
-        labspaces: [...additionalLabspaces, ...labspaces.slice(3)],
-        addLabspace,
-        removeLabspace,
       }}
     >
       {children}

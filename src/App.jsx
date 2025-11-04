@@ -1,12 +1,15 @@
 import "./App.scss";
+import { CatalogContextProvider } from "./CatalogContext";
 import { DockerContextProvider } from "./DockerContext";
 import { Home } from "./Home";
 
 function App() {
   return (
-    <DockerContextProvider>
-      <Home />
-    </DockerContextProvider>
+    <CatalogContextProvider>
+      <DockerContextProvider>
+        <Home />
+      </DockerContextProvider>
+    </CatalogContextProvider>
   );
 }
 

@@ -2,12 +2,15 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { useState } from "react";
 
-export function UrlHandlingModal({ onLaunchConfirmation }) {
+export function LaunchLabspaceFromUrlModal({ onLaunchConfirmation }) {
   const searchParams = new URLSearchParams(window.location.search);
   const title = searchParams.get("title");
   const location = searchParams.get("location");
+  const type = searchParams.get("type");
 
-  const [show, setShow] = useState(title && location);
+  const [show, setShow] = useState(
+    title && location && (type === null || type === "labspace"),
+  );
 
   const handleConfirm = () => {
     setShow(false);

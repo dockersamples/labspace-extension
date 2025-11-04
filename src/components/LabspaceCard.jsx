@@ -1,7 +1,11 @@
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import { useDockerContext } from "../DockerContext";
 
-export function LabspaceCard({ labspace, onLaunch, starting, running }) {
+export function LabspaceCard({ labspace }) {
+  const { runningLabspace, startLabspace, startingLabspace, removeLabspace } =
+    useDockerContext();
+
   return (
     <Card className="h-100">
       <Card.Body>
@@ -9,10 +13,30 @@ export function LabspaceCard({ labspace, onLaunch, starting, running }) {
         <Card.Text>{labspace.description}</Card.Text>
       </Card.Body>
       <Card.Footer className="d-flex align-items-center justify-content-between">
-        <div>Created by {labspace.author}</div>
-        <Button onClick={onLaunch} disabled={starting || running}>
-          {starting ? "Starting..." : "Launch"}
-        </Button>
+        <div>
+          {labspace.author ? (
+            `Created by ${labspace.author}`
+          ) : (
+            <em>Custom Labspace</em>
+          )}
+        </div>
+        <div>
+          {!labspace.catalog && (
+            <Button
+              className="me-2"
+              variant="danger"
+              onClick={() => removeLabspace(labspace.publishedRepo)}
+            >
+              Remove
+            </Button>
+          )}
+          <Button
+            onClick={() => startLabspace(labspace.publishedRepo)}
+            disabled={startingLabspace || runningLabspace}
+          >
+            {startingLabspace ? "Starting..." : "Launch"}
+          </Button>
+        </div>
       </Card.Footer>
     </Card>
   );
