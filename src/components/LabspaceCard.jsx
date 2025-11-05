@@ -34,7 +34,9 @@ export function LabspaceCard({ labspace }) {
             onClick={() => startLabspace(labspace.publishedRepo)}
             disabled={startingLabspace || runningLabspace}
           >
-            {startingLabspace ? "Starting..." : "Launch"}
+            {startingLabspace === labspace.publishedRepo
+              ? "Starting..."
+              : "Launch"}
           </Button>
         </div>
       </Card.Footer>
