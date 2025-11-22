@@ -46,8 +46,8 @@ export function CatalogContextProvider({ children }) {
   }, [customLabspaces]);
 
   const addCatalog = useCallback(
-    (name, url) => {
-      setCatalogs((catalog) => [...catalog, { name, url }]);
+    ({name, url, content}) => {
+      setCatalogs((catalog) => [...catalog, { name, url, content }]);
     },
     [setCatalogs],
   );
@@ -89,16 +89,22 @@ export function CatalogContextProvider({ children }) {
 
   useEffect(() => {
     Promise.all(
-      catalogs.map((catalog) =>
-        fetch(catalog.url)
-          .then((res) => res.text())
-          .then((text) => parse(text))
-          .then((data) => ({
-            ...catalog,
-            tags: data.tags || [],
-            labspaces: data.labspaces || [],
-          })),
-      ),
+      catalogs.map(async (catalog) => {
+        let catalogContent;
+        if (catalog.content) {
+          console.log("Got some content", catalog.content);
+          catalogContent = catalog.content;
+        } else {
+          catalogContent = await fetch(catalog.url).then((res) => res.text());
+        }
+        
+        const data = parse(catalogContent);
+        return ({
+          ...catalog,
+          tags: data.tags || [],
+          labspaces: data.labspaces || [],
+        });
+      }),
     ).then((results) => setCatalogDetails(results));
   }, [catalogs]);
 

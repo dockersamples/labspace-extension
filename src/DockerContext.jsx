@@ -90,9 +90,11 @@ export function DockerContextProvider({ children }) {
       setLaunchLog("");
       setStartingLabspace(location);
 
+      const projectFileLocation = location.startsWith("/") ? location : `oci://${location}`;
+
       ddClient.docker.cli.exec(
         "compose",
-        ["-f", `oci://${location}`, "-p", "labspace", "up", "-d", "-y"],
+        ["-f", projectFileLocation, "-p", "labspace", "up", "-d", "-y"],
         {
           stream: {
             onOutput(data) {

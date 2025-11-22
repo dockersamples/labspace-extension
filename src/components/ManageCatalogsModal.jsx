@@ -23,8 +23,7 @@ async function validateUrlResponse(url) {
   return response;
 }
 
-async function validateCatalogContent(response) {
-  const data = await response.text();
+async function validateCatalogContent(data) {
   let catalog;
   try {
     catalog = parse(data);
@@ -44,6 +43,7 @@ export function ManageCatalogsModal({ show, onClose }) {
   const { catalogs, addCatalog, removeCatalog } = useCatalogs();
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
+  const [catalogContent, setCatalogContent] = useState("");
   const [error, setError] = useState(null);
   const [showCatalogAdded, setShowCatalogAdded] = useState(false);
 
@@ -57,7 +57,8 @@ export function ManageCatalogsModal({ show, onClose }) {
     try {
       validateUrl(url);
       const response = await validateUrlResponse(url);
-      await validateCatalogContent(response);
+      const data = await response.text();
+      await validateCatalogContent(data);
 
       return true;
     } catch (e) {
@@ -66,12 +67,23 @@ export function ManageCatalogsModal({ show, onClose }) {
     }
   }, []);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    validate(url)
-      .then(() => addCatalog(title, url))
-      .then(() => setShowCatalogAdded(true))
-      .then(() => reset());
+    setError(null);
+
+    if (!url && !catalogContent) {
+      setError("Please provide either a URL or catalog content");
+      return;
+    }
+
+    if (url)
+      await validate(url);
+    else
+      await validateCatalogContent(catalogContent);
+
+    addCatalog({ name: title, url, content: catalogContent });
+    setShowCatalogAdded(true);
+    reset();
   }
 
   function handleCancel() {
@@ -137,15 +149,30 @@ export function ManageCatalogsModal({ show, onClose }) {
             />
           </Form.Group>
 
+          <Alert variant="info">
+            You can add a catalog by either providing the URL or the content of the catalog definition file.
+            If both are provided, the URL will be used.
+          </Alert>
+
           <Form.Group className="mb-3" controlId="labspaceComposeFile">
             <Form.Label>Catalog URL</Form.Label>
             <Form.Control
               type="text"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              required
             />
             <Form.Text muted>Location of the catalog definition file</Form.Text>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="labspaceComposeFile">
+            <Form.Label>Catalog Content</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={7}
+              value={catalogContent}
+              onChange={(e) => setCatalogContent(e.target.value)}
+            />
+            <Form.Text muted>Content of the catalog definition file</Form.Text>
           </Form.Group>
 
           {showCatalogAdded && (
