@@ -46,7 +46,7 @@ export function CatalogContextProvider({ children }) {
   }, [customLabspaces]);
 
   const addCatalog = useCallback(
-    ({name, url, content}) => {
+    ({ name, url, content }) => {
       setCatalogs((catalog) => [...catalog, { name, url, content }]);
     },
     [setCatalogs],
@@ -97,13 +97,13 @@ export function CatalogContextProvider({ children }) {
         } else {
           catalogContent = await fetch(catalog.url).then((res) => res.text());
         }
-        
+
         const data = parse(catalogContent);
-        return ({
+        return {
           ...catalog,
           tags: data.tags || [],
           labspaces: data.labspaces || [],
-        });
+        };
       }),
     ).then((results) => setCatalogDetails(results));
   }, [catalogs]);

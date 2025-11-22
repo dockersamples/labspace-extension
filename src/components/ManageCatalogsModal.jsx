@@ -76,10 +76,8 @@ export function ManageCatalogsModal({ show, onClose }) {
       return;
     }
 
-    if (url)
-      await validate(url);
-    else
-      await validateCatalogContent(catalogContent);
+    if (url) await validate(url);
+    else await validateCatalogContent(catalogContent);
 
     addCatalog({ name: title, url, content: catalogContent });
     setShowCatalogAdded(true);
@@ -150,8 +148,9 @@ export function ManageCatalogsModal({ show, onClose }) {
           </Form.Group>
 
           <Alert variant="info">
-            You can add a catalog by either providing the URL or the content of the catalog definition file.
-            If both are provided, the URL will be used.
+            You can add a catalog by either providing the URL or the content of
+            the catalog definition file. If both are provided, the URL will be
+            used.
           </Alert>
 
           <Form.Group className="mb-3" controlId="labspaceComposeFile">

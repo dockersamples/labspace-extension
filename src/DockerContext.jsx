@@ -90,7 +90,9 @@ export function DockerContextProvider({ children }) {
       setLaunchLog("");
       setStartingLabspace(location);
 
-      const projectFileLocation = location.startsWith("/") ? location : `oci://${location}`;
+      const projectFileLocation = location.startsWith("/")
+        ? location
+        : `oci://${location}`;
 
       ddClient.docker.cli.exec(
         "compose",
