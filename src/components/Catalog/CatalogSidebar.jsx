@@ -5,13 +5,31 @@ import { useCatalogs } from "../../CatalogContext";
 import { ManageCatalogsModal } from "../ManageCatalogsModal";
 
 export function CatalogSidebar({ onFilterChange }) {
-  const { catalogs, tags, addCatalog } = useCatalogs();
+  const { catalogs, tags } = useCatalogs();
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeCategory, setActiveCategory] = useState(null);
+  const [activeCategory, setActiveCategory] = useState(
+    localStorage.getItem("labspaces.activeCategory") || null
+  );
   const [selectedCatalogs, setSelectedCatalogs] = useState(
-    catalogs.map((c) => c.name),
+    localStorage.getItem("labspaces.selectedCatalogs")
+      ? JSON.parse(localStorage.getItem("labspaces.selectedCatalogs"))
+      : catalogs.map((c) => c.name),
   );
   const [showManageCatalogsModal, setShowManageCatalogsModal] = useState(false);
+
+  useEffect(() => {
+    if (activeCategory)
+      localStorage.setItem("labspaces.activeCategory", activeCategory);
+    else
+      localStorage.removeItem("labspaces.activeCategory");
+  }, [activeCategory]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "labspaces.selectedCatalogs",
+      JSON.stringify(selectedCatalogs),
+    );
+  }, [selectedCatalogs]);
 
   useEffect(() => {
     const filters = [];
