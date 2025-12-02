@@ -77,7 +77,7 @@ export function CatalogContextProvider({ children }) {
     const allLabspaces = [...customLabspaces];
     catalogDetails.forEach((catalog) => {
       catalog.labspaces.forEach((labspace) => {
-        allLabspaces.push({ ...labspace, catalog: catalog.url });
+        allLabspaces.push({ ...labspace, catalog: { name: catalog.name, url: catalog.url } });
       });
     });
     return allLabspaces.sort((a, b) => {

@@ -9,14 +9,14 @@ export function CatalogSidebar({ onFilterChange }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState(null);
   const [selectedCatalogs, setSelectedCatalogs] = useState(
-    catalogs.map((c) => c.url),
+    catalogs.map((c) => c.name),
   );
   const [showManageCatalogsModal, setShowManageCatalogsModal] = useState(false);
 
   useEffect(() => {
     const filters = [];
 
-    filters.push((l) => selectedCatalogs.includes(l.catalog));
+    filters.push((l) => selectedCatalogs.includes(l.catalog.name));
 
     if (searchTerm && searchTerm.length > 0) {
       filters.push(
@@ -92,15 +92,15 @@ export function CatalogSidebar({ onFilterChange }) {
             label={`${c.name} (${c.labspaces.length})`}
             name="catalog-filter"
             onChange={() => {
-              if (selectedCatalogs.includes(c.url)) {
+              if (selectedCatalogs.includes(c.name)) {
                 setSelectedCatalogs(
-                  selectedCatalogs.filter((url) => url !== c.url),
+                  selectedCatalogs.filter((name) => name !== c.name),
                 );
               } else {
-                setSelectedCatalogs([...selectedCatalogs, c.url]);
+                setSelectedCatalogs([...selectedCatalogs, c.name]);
               }
             }}
-            checked={selectedCatalogs.includes(c.url)}
+            checked={selectedCatalogs.includes(c.name)}
           />
         ))}
       </div>
