@@ -8,7 +8,7 @@ export function CatalogSidebar({ onFilterChange }) {
   const { catalogs, tags } = useCatalogs();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState(
-    localStorage.getItem("labspaces.activeCategory") || null
+    localStorage.getItem("labspaces.activeCategory") || null,
   );
   const [selectedCatalogs, setSelectedCatalogs] = useState(
     localStorage.getItem("labspaces.selectedCatalogs")
@@ -20,8 +20,7 @@ export function CatalogSidebar({ onFilterChange }) {
   useEffect(() => {
     if (activeCategory)
       localStorage.setItem("labspaces.activeCategory", activeCategory);
-    else
-      localStorage.removeItem("labspaces.activeCategory");
+    else localStorage.removeItem("labspaces.activeCategory");
   }, [activeCategory]);
 
   useEffect(() => {
