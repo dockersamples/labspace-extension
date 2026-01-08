@@ -39,7 +39,11 @@ export function Home() {
       <RunningNotice
         hasLabspace={hasLabspace}
         isRunning={!!runningLabspace}
-        labspaceTitle={runningLabspace ? (runningLabspace?.metadata?.title ?? runningLabspace.title) : ""}
+        labspaceTitle={
+          runningLabspace
+            ? (runningLabspace?.metadata?.title ?? runningLabspace.title)
+            : ""
+        }
         onRemove={stopLabspace}
         isStopping={stoppingLabspace}
       />
