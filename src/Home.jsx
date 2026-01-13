@@ -41,7 +41,7 @@ export function Home() {
         isRunning={!!runningLabspace}
         labspaceTitle={
           runningLabspace
-            ? (runningLabspace?.metadata?.title ?? runningLabspace.title)
+            ? (runningLabspace.title)
             : ""
         }
         onRemove={stopLabspace}
