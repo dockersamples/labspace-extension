@@ -23,7 +23,7 @@ LABEL org.opencontainers.image.title="Labspaces" \
     com.docker.extension.publisher-url="https://github.com/dockersamples/labspace-extension" \
     com.docker.extension.additional-urls="[{\"title\":\"Create your own Labspace\",\"url\":\"https://github.com/dockersamples/labspace-starter\"}]" \
     com.docker.extension.categories="cloud-development" \
-    com.docker.extension.changelog="- Support for new labspace.yaml schema"
+    com.docker.extension.changelog="- Code cleanup and dependency updates"
 COPY beaker.svg /
 COPY metadata.json /
 COPY --from=build /usr/local/app/dist /ui
