@@ -65,10 +65,11 @@ export function DockerContextProvider({ children }) {
         "exec",
         "interface",
         "cat",
-        "/project/labspace.yaml",
+        "/labspace/instructions/labspace.yaml",
       ])
       .then(({ stdout }) => {
         const labspaceDetails = parse(stdout);
+        console.log("Running labspace details:", labspaceDetails);
         setRunningLabspace(labspaceDetails);
       });
   }, [hasLabspace, setRunningLabspace, forceRefreshCount]);
