@@ -23,7 +23,7 @@ LABEL org.opencontainers.image.title="Labspaces" \
     com.docker.extension.publisher-url="https://github.com/dockersamples/labspace-extension" \
     com.docker.extension.additional-urls="[{\"title\":\"Create your own Labspace\",\"url\":\"https://github.com/dockersamples/labspace-starter\"}]" \
     com.docker.extension.categories="cloud-development" \
-    com.docker.extension.changelog="- Fix detection of currently running labspace"
+    com.docker.extension.changelog="- Fix error caused when launching a custom/non-catalog Labspace"
 COPY beaker.svg /
 COPY metadata.json /
 COPY --from=build /usr/local/app/dist /ui
