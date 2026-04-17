@@ -33,7 +33,7 @@ export function CatalogSidebar({ onFilterChange }) {
   useEffect(() => {
     const filters = [];
 
-    filters.push((l) => selectedCatalogs.includes(l.catalog.name));
+    filters.push((l) => selectedCatalogs.includes(l.catalog?.name));
 
     if (searchTerm && searchTerm.length > 0) {
       filters.push(
