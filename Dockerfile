@@ -1,4 +1,4 @@
-FROM dhi.io/node:24-alpine3.23 AS base
+FROM dhi.io/node:24-alpine3.23-dev AS base
 WORKDIR /usr/local/app
 COPY package*.json ./
 RUN npm install
