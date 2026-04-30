@@ -1,4 +1,4 @@
-FROM node:lts-slim AS base
+FROM dhi.io/node:24-alpine3.23-dev AS base
 WORKDIR /usr/local/app
 COPY package*.json ./
 RUN npm install
@@ -12,7 +12,7 @@ CMD ["npm", "run", "dev"]
 FROM base AS build
 RUN npm run build && ls dist
 
-FROM alpine
+FROM dhi.io/alpine-base:3.23
 LABEL org.opencontainers.image.title="Labspaces" \
     org.opencontainers.image.description="Learn through interactive and hands-on Labspaces" \
     org.opencontainers.image.vendor="Docker, Inc." \
