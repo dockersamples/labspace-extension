@@ -12,7 +12,7 @@ CMD ["npm", "run", "dev"]
 FROM base AS build
 RUN npm run build && ls dist
 
-FROM dhi.io/alpine-base:3.23
+FROM dhi.io/static:20260413-alpine3.23
 LABEL org.opencontainers.image.title="Labspaces" \
     org.opencontainers.image.description="Learn through interactive and hands-on Labspaces" \
     org.opencontainers.image.vendor="Docker, Inc." \
