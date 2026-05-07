@@ -113,7 +113,7 @@ export function CatalogContextProvider({ children }) {
 
   const addCustomLabspace = useCallback(
     (title, publishedRepo) => {
-      const newLabspace = { title, publishedRepo };
+      const newLabspace = { title, publishedRepo, catalog: { url: "custom", name: "Custom Labspaces" } };
       setCustomLabspaces((labspaces) => [...labspaces, newLabspace]);
     },
     [setCustomLabspaces],
@@ -127,6 +127,21 @@ export function CatalogContextProvider({ children }) {
     },
     [setCustomLabspaces],
   );
+
+  const fullCatalogDetails = useMemo(() => {
+    if (!catalogDetails || !labspaces) return null;
+
+    const details = [...catalogDetails];
+    if (labspaces.filter(l => l.catalog.url === "custom").length > 0) {
+      details.push({
+        name: "Custom Labspaces",
+        url: "custom",
+        tags: [],
+        labspaces: labspaces.filter(l => l.catalog.url === "custom")
+      });
+    }
+    return details;
+  }, [catalogDetails, labspaces]);
 
   if (!catalogDetails || !labspaces || !tags) {
     return (
@@ -144,7 +159,7 @@ export function CatalogContextProvider({ children }) {
   return (
     <CatalogContext.Provider
       value={{
-        catalogs: catalogDetails,
+        catalogs: fullCatalogDetails,
         addCatalog,
         removeCatalog,
         tags,

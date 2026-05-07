@@ -1,10 +1,12 @@
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { useDockerContext } from "../DockerContext";
+import { useCatalogs } from "../CatalogContext";
 
 export function LabspaceCard({ labspace }) {
-  const { runningLabspace, startLabspace, startingLabspace, removeLabspace } =
+  const { runningLabspace, startLabspace, startingLabspace } =
     useDockerContext();
+  const { removeCustomLabspace } = useCatalogs();
 
   return (
     <Card className="h-100">
@@ -21,11 +23,11 @@ export function LabspaceCard({ labspace }) {
           )}
         </div>
         <div>
-          {!labspace.catalog && (
+          {labspace.catalog.url === "custom" && (
             <Button
               className="me-2"
               variant="danger"
-              onClick={() => removeLabspace(labspace.publishedRepo)}
+              onClick={() => removeCustomLabspace(labspace.publishedRepo)}
             >
               Remove
             </Button>

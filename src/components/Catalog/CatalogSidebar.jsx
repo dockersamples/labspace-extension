@@ -17,18 +17,31 @@ export function CatalogSidebar({ onFilterChange }) {
   );
   const [showManageCatalogsModal, setShowManageCatalogsModal] = useState(false);
 
+  // Whenever catalogs change, ensure selected catalogs are still valid unless the user has explicitly set selected catalogs before
+  useEffect(() => {
+    if (localStorage.getItem("labspaces.selectedCatalogs")) return;
+    setSelectedCatalogs(catalogs.map((c) => c.name));
+  }, [catalogs]);
+
   useEffect(() => {
     if (activeCategory)
       localStorage.setItem("labspaces.activeCategory", activeCategory);
     else localStorage.removeItem("labspaces.activeCategory");
   }, [activeCategory]);
 
+  // Persist selected catalogs in local storage, but only if it differs from the 
+  // full list of catalogs (to avoid unnecessary storage and to allow dynamic catalogs 
+  // without forcing users to reset their selection)
   useEffect(() => {
-    localStorage.setItem(
-      "labspaces.selectedCatalogs",
-      JSON.stringify(selectedCatalogs),
-    );
-  }, [selectedCatalogs]);
+    if (selectedCatalogs.length === catalogs.length) {
+      localStorage.removeItem("labspaces.selectedCatalogs");
+    } else {
+      localStorage.setItem(
+        "labspaces.selectedCatalogs",
+        JSON.stringify(selectedCatalogs),
+      );
+    }
+  }, [selectedCatalogs, catalogs]);
 
   useEffect(() => {
     const filters = [];
