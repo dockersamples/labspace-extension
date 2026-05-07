@@ -21,6 +21,22 @@ const CATALOGS = [
 const LOCALSTORAGE_CATALOG_KEY = "labspaces.catalogs";
 const LOCALSTORAGE_ADDITIONAL_LABSPACES_KEY = "labspaces.additionalLabspaces";
 
+// Quick backwards compatibility for old local storage keys
+if (localStorage.getItem(LOCALSTORAGE_ADDITIONAL_LABSPACES_KEY)) {
+  const customLabs = JSON.parse(localStorage.getItem(LOCALSTORAGE_ADDITIONAL_LABSPACES_KEY));
+
+  customLabs.forEach((lab) => {
+    if (!lab.catalog) {
+      lab.catalog = { url: "custom", name: "Custom Labspaces" };
+    }
+  });
+  
+  localStorage.setItem(
+    LOCALSTORAGE_ADDITIONAL_LABSPACES_KEY,
+    JSON.stringify(customLabs),
+  );
+}
+
 export function CatalogContextProvider({ children }) {
   const [catalogs, setCatalogs] = useState(
     localStorage.getItem(LOCALSTORAGE_CATALOG_KEY)
