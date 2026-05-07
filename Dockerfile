@@ -23,7 +23,7 @@ LABEL org.opencontainers.image.title="Labspaces" \
     com.docker.extension.publisher-url="https://github.com/dockersamples/labspace-extension" \
     com.docker.extension.additional-urls="[{\"title\":\"Create your own Labspace\",\"url\":\"https://github.com/dockersamples/labspace-starter\"}]" \
     com.docker.extension.categories="cloud-development" \
-    com.docker.extension.changelog="- Fix bug causing custom Labspaces from not displaying in the catalog UI"
+    com.docker.extension.changelog="- Fix error when opening the extension with custom labs previously configured"
 COPY beaker.svg /
 COPY metadata.json /
 COPY --from=build /usr/local/app/dist /ui
